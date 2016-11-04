@@ -23,3 +23,24 @@ app.service('myFirstService', function() {
   
 });
 ```
+
+So, let's create a value inside that service and then stick that value in the controller inside a scope variable so we can see it on the DOM. To do this, we just need to inject the name of the service into the controller's callback arguments, just like `$scope` and `$http`. Now that we injected it into the controller, we now have access to the values and the function inside `myFirstService`. Let's prove that by adding a value to the service. Inside the callback function, add: `this.firstValue = 2`. Now, lets go back to the controller and add a scope variable called `$scope.serviceValue` and assign that to `myFirstService.firstValue`. After doing that, head back to `index.html` and add a div below all of our SWAPI stuff and add `{{serviceValue}}`.
+
+```text
+var app = angular.module('myFirstNgApp', []);
+
+app.controller('myFirstController', function($scope, $http, myFirstService) {
+  $scope.makeAPIcall = function(character) {
+    $http.get('https://swapi.co/api/people/?search=' + character)
+     .then(function(api_response) {
+       console.log(api_response);
+       $scope.results = api_response.data.results;
+     });
+  }
+  $scope.serviceValue = myFirstService.firstValue;
+});
+
+app.service('myFirstService', function() {
+  this.firstValue = 2;
+});
+``` 

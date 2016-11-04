@@ -71,11 +71,32 @@ app.service('myFirstService', function() {
   </body>
 </html>
 ```
-You'll see that when you save and refresh that now you'll see the value right on the DOM! That is essentially services in a nutshell, but let's show you a couple of other ways that we can clean up the controller by using a service. Let's go back to the `app.js` page and take a look at our controller. Wouldn't it be nice if we could clean up that API call a little bit? I agree. Let's do it. Down in `myFirstService`, let's create a function inside there called `this.getCharacter` and write this in there: `return $http.get('https://swapi.co/api/people/?search=' + character)`. So, we're telling the service that when a controller calls `this.getCharacter`, return the promise from that http request to the controller, so the controller can deal with the response. 
+You'll see that when you save and refresh that now you'll see the value right on the DOM! That is essentially services in a nutshell, but let's show you a couple of other ways that we can clean up the controller by using a service. Let's go back to the `app.js` page and take a look at our controller. Wouldn't it be nice if we could clean up that API call a little bit? I agree. Let's do it. Down in `myFirstService`, let's create a function inside there called `this.getCharacter` with an argument of `character` because need to pass that value from the input element to the controller to the service and write this in there: `return $http.get('https://swapi.co/api/people/?search=' + character)`. So, we're telling the service that when a controller calls `this.getCharacter`, return the promise from that http request to the controller, so the controller can deal with the response. 
 
 ```text
 app.service('myFirstService', function() {
-  this.getCharacter = function(){
+  this.getCharacter = function(character){
+    return $http.get('https://swapi.co/api/people/?search=' + character);
+  }
+});
+```
+Let's go back to the controller and make this thing work. We already have the service injected, so we don't need to worry about that. Just because we don't need it anymore, just remove the `$scope.serviceValue` line. Inside `$scope.makeAPIcall`, replace `$http.get('https://swapi.co/api/people/?search=' + character)` with `myFirstService.getCharacter(character)`, then save/refresh. When you search and click the button, nothing happens...but why? So, open up your browser console and you'll see that there's an error `$http is not defined`. Ahhh, we never injected `$http` into the service. This is the error that you'll see if you ever forget to inject something somewhere. There are probably 4 or 5 error that you will commonly see when you're writing Angular. This is one of them. Take note of what it takes to fix these errors because you will probably see them again at some point. Let's fix this, though, by injecting `$http` into our service and try searching again after saving/refreshing. Here's what your `app.js` should look like:
+```text
+var app = angular.module('myFirstNgApp', []);
+
+app.controller('myFirstController', function($scope, $http, myFirstService) {
+  $scope.makeAPIcall = function(character) {
+    myFirstService.getCharacter(character)
+     .then(function(api_response) {
+       console.log(api_response);
+       $scope.results = api_response.data.results;
+     });
+  }
+  $scope.serviceValue = myFirstService.firstValue;
+});
+
+app.service('myFirstService', function($http) {
+  this.getCharacter = function(character){
     return $http.get('https://swapi.co/api/people/?search=' + character);
   }
 });

@@ -24,7 +24,7 @@ app.service('myFirstService', function() {
 });
 ```
 
-So, let's create a value inside that service and then stick that value in the controller inside a scope variable so we can see it on the DOM. To do this, we just need to inject the name of the service into the controller's callback arguments, just like `$scope` and `$http`. Now that we injected it into the controller, we now have access to the values and the function inside `myFirstService`. Let's prove that by adding a value to the service. Inside the callback function, add: `this.firstValue = 2`. Now, lets go back to the controller and add a scope variable called `$scope.serviceValue` and assign that to `myFirstService.firstValue`. After doing that, head back to `index.html` and add a div below all of our SWAPI stuff and add `{{serviceValue}}`.
+So, let's create a value inside that service and then stick that value in the controller inside a scope variable so we can see it on the DOM. To do this, we just need to inject the name of the service into the controller's callback arguments, just like `$scope` and `$http`. Now that we injected it into the controller, we now have access to the values and the function inside `myFirstService`. Let's prove that by adding a value to the service. Inside the callback function, add: `this.firstValue = 2`. Now, lets go back to the controller and add a scope variable called `$scope.serviceValue` and assign that to `myFirstService.firstValue`.
 
 ```text
 var app = angular.module('myFirstNgApp', []);
@@ -44,3 +44,30 @@ app.service('myFirstService', function() {
   this.firstValue = 2;
 });
 ``` 
+ After doing that, head back to `index.html` and add a div below all of our SWAPI stuff and add `{{serviceValue}}`.
+```text
+<!DOCTYPE html>
+<html ng-app="myFirstNgApp">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body ng-controller="myFirstController">
+
+    <input type="text" ng-model="character">
+    <button ng-click="makeAPIcall(character)">Search</button>
+
+    <div class="" ng-repeat="result in results">
+      <p>Character name: {{result.name}}</p>
+      <p>Birth year: {{result.birth_year}}</p>
+    </div>
+
+    <div class="">
+      {{serviceValue}}
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js" charset="utf-8"></script>
+    <script src="app.js" charset="utf-8"></script>
+  </body>
+</html>
+```

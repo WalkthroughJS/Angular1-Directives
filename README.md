@@ -101,3 +101,16 @@ app.service('myFirstService', function($http) {
   }
 });
 ```
+After searching for "Luke", it should be working just like before. Note that the controller looks marginally cleaner. When you have more intricate sychronous functions instead of an async API call, it is much more apparent, but you get the point. We said that we were going to do a factory, too, though, so let's do that. Below `app.service`, let's create an `app.factory` with the same two arguments and the `$http` service injected into the callback function. The difference between the two is that a factory returns an object, so instead of just declaring `this.getCharacter`, we're going to return an object with `getCharacter` as a key and its function as the value. It looks like this: 
+
+```text
+app.factory('myFirstFactory', function($http) {
+  return {
+    getCharacter: function(character){
+      return $http.get('https://swapi.co/api/people/?search=' + character);
+    }
+  }
+});
+```
+
+I'll let switching the factory out and making it work just the same be your homework, so to speak, but it will function exactly the same in the end, so pick either the service or the factory...or even have some of each. Hey, variety is the spice of life. Just make sure it all works in the end. Thanks for reading and I'll see you in the next lesson!

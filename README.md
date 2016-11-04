@@ -24,7 +24,7 @@ app.service('myFirstService', function() {
 });
 ```
 
-So, let's create a value inside that service and then stick that value in the controller inside a scope variable so we can see it on the DOM. To do this, we just need to inject the name of the service into the controller's callback arguments, just like `$scope` and `$http`. Now that we injected it into the controller, we now have access to the values and the function inside `myFirstService`. Let's prove that by adding a value to the service. Inside the callback function, add: `this.firstValue = 2`. Now, lets go back to the controller and add a scope variable called `$scope.serviceValue` and assign that to `myFirstService.firstValue`.
+So, let's create an exportable value inside that service and then stick that value in the controller inside a scope variable so we can see it on the DOM. To do this, we just need to inject the name of the service into the controller's callback arguments, just like `$scope` and `$http`. Now that we injected it into the controller, we now have access to the values and the function inside `myFirstService`. Let's prove that by adding a value to the service. Inside the callback function, add: `this.firstValue = 2`. It's worth noting that for a value or a function to be available from outside the service, it needs to be attached to `this`. If we were to have `var firstValue = 2`, it would not be accessible by anything you injected the service into. Now, lets go back to the controller and add a scope variable called `$scope.serviceValue` and assign that to `myFirstService.firstValue`.
 
 ```text
 var app = angular.module('myFirstNgApp', []);
@@ -70,4 +70,13 @@ app.service('myFirstService', function() {
     <script src="app.js" charset="utf-8"></script>
   </body>
 </html>
+```
+You'll see that when you save and refresh that now you'll see the value right on the DOM! That is essentially services in a nutshell, but let's show you a couple of other ways that we can clean up the controller by using a service. Let's go back to the `app.js` page and take a look at our controller. Wouldn't it be nice if we could clean up that API call a little bit? I agree. Let's do it. Down in `myFirstService`, let's create a function inside there called `this.getCharacter` and write this in there: `return $http.get('https://swapi.co/api/people/?search=' + character)`. So, we're telling the service that when a controller calls `this.getCharacter`, return the promise from that http request to the controller, so the controller can deal with the response. 
+
+```text
+app.service('myFirstService', function() {
+  this.getCharacter = function(){
+    return $http.get('https://swapi.co/api/people/?search=' + character);
+  }
+});
 ```
